@@ -14,9 +14,13 @@ app.use(middlewareLogResponses);
 app.use("/app",middlewareMetricsInc);
 app.use("/app", express.static("./src/app"));
 
-app.get("/healthz", handlerReadiness)
-app.get("/metrics", handlerMetrics)
-app.get("/reset", handlerResetMetrics)
+app.get("/api/healthz", handlerReadiness)
+
+app.get("/admin/metrics", handlerMetrics)
+app.post("/admin/reset", handlerResetMetrics)
+// app.post("/api/validate_chirp", () =>{
+
+// })
 
 app.listen(PORT,() => {
     console.log(`Server listening on PORT: ${PORT}`)
