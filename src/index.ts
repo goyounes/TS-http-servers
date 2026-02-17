@@ -1,4 +1,4 @@
-import express from "express"
+import express, { NextFunction, Response, Request } from "express"
 import { handlerReadiness } from "./handlers/handlerReadiness.js";
 import { middlewareLogResponses } from "./middlewares/logResponses.js";
 import { middlewareMetricsInc } from "./middlewares/metricsInc.js";
@@ -20,6 +20,20 @@ app.get("/api/healthz", handlerReadiness)
 app.get("/admin/metrics", handlerMetrics)
 app.post("/admin/reset", handlerResetMetrics)
 app.post("/api/validate_chirp", handlerValidateChirp )
+
+function errorHandler(
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  console.error("Something went wrong on our end");
+  res.status(500).json({
+    error: "Something went wrong on our end",
+  });
+}
+
+app.use(errorHandler);
 
 app.listen(PORT,() => {
     console.log(`Server listening on PORT: ${PORT}`)
