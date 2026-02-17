@@ -1,22 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import { config } from "../config.js"
+import { BadRequestError } from "../errors.js";
+
 
 export async function handlerValidateChirp(req: Request, res: Response, next: NextFunction) {
     type parameters = {
         body: string;
     };
     const params: parameters = req.body;
-    // now you can use `parsedBody` as a JavaScript object
-    if (!params.body){
-        // res.status(400).send(JSON.stringify({"error": "Something went wrong"}))
-        next(new Error())
-        return
-    }
 
-    if (params.body.length > 140){
-        // res.status(400).send(JSON.stringify({"error": "Chirp is too long"}))
-        next(new Error())
-        return
+    if (!params.body){
+        throw new Error()
+    }
+    const maxChirpLength = 140;
+    if (params.body.length > maxChirpLength){
+        const message = `Chirp is too long. Max length is ${maxChirpLength}`
+        console.log(message)
+        throw new BadRequestError(message)
     }
 
     const cleanText = replaceProfaneWords(params.body)
