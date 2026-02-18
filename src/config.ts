@@ -15,4 +15,9 @@ export const config: APIConfig = {
     dbURL:  envOrThrow("dbURL")
 }
 
+import type { MigrationConfig } from "drizzle-orm/migrator";
+
+const migrationConfig: MigrationConfig = {
+  migrationsFolder: "./src/db/migrations",
+};
 
