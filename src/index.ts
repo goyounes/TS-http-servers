@@ -7,7 +7,7 @@ const migrationClient = postgres(config.db.url, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
 
 // ------ init express app ------
-import express from "express"
+import express, { NextFunction, Request, RequestHandler, Response } from "express"
 import { handlerReadiness } from "./handlers/handlerReadiness.js";
 import { middlewareLogResponses } from "./middlewares/logResponses.js";
 import { middlewareMetricsInc } from "./middlewares/metricsInc.js";
@@ -26,21 +26,24 @@ app.use(middlewareLogResponses);
 app.use("/app",middlewareMetricsInc);
 app.use("/app", express.static("./src/app"));
 
-app.get("/api/healthz", (req, res, next) => {
-  Promise.resolve(handlerReadiness(req, res)).catch(next);
-});
-app.get("/admin/metrics", (req, res, next) => {
-  Promise.resolve(handlerMetrics(req, res)).catch(next);
-});
-app.post("/admin/reset", (req, res, next) => {
-  Promise.resolve(handlerResetMetrics(req, res)).catch(next);
-});
+type AsyncHandler = (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+) => Promise<void> | void;
 
-app.post("/api/validate_chirp", (req, res, next) => {
-  Promise.resolve(handlerValidateChirp(req, res)).catch(next);
-});
+export function asyncHandler(fn: AsyncHandler): RequestHandler {
+    return function(req: Request, res: Response, next: NextFunction) {
+        return Promise.resolve(fn(req, res, next)).catch(next);
+    };
+}
 
-app.post("/api/users", handlerRegister )
+app.get("/api/healthz", asyncHandler(handlerReadiness));
+app.get("/admin/metrics", asyncHandler(handlerMetrics));
+app.post("/admin/reset", asyncHandler(handlerResetMetrics));
+app.post("/api/validate_chirp", asyncHandler(handlerValidateChirp));
+
+app.post("/api/users", asyncHandler(handlerRegister) )
 
 
 
