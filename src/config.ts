@@ -1,7 +1,7 @@
 process.loadEnvFile()
 function envOrThrow (key: string): string {
-    if (!process.env.dbURL) throw new Error("database url is not set") 
-    return process.env.dbURL
+    if (!process.env[key]) throw new Error("database url is not set") 
+    return process.env[key]
 }
 
 export type APIConfig = {
@@ -20,7 +20,7 @@ const migrationConfig: MigrationConfig = {
   migrationsFolder: "./src/db/migrations",
 };
 const dbConfig = {
-  url: envOrThrow("dbURL"),
+  url: envOrThrow("DB_URL"),
   migrationConfig: migrationConfig
 };
 

@@ -7,7 +7,7 @@ const migrationClient = postgres(config.db.url, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
 
 // ------ init express app ------
-import express, { Response } from "express"
+import express from "express"
 import { handlerReadiness } from "./handlers/handlerReadiness.js";
 import { middlewareLogResponses } from "./middlewares/logResponses.js";
 import { middlewareMetricsInc } from "./middlewares/metricsInc.js";

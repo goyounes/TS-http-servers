@@ -1,5 +1,5 @@
 import express, { NextFunction, Response, Request } from "express"
-import { BadRequestError, NotFoundError, UserForbiddenError, UserNotAuthenticatedError } from "./errorsClasses";
+import { BadRequestError, NotFoundError, UserForbiddenError, UserNotAuthenticatedError } from "./errorsClasses.js";
 
 export function errorMiddleware(err: Error, _: Request, res: Response, __: NextFunction) {
     let statusCode = 500;
