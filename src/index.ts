@@ -7,7 +7,7 @@ const migrationClient = postgres(config.db.url, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
 
 // ------ init express app ------
-import express, { NextFunction, Request, RequestHandler, Response } from "express"
+import express, { Response } from "express"
 import { handlerReadiness } from "./handlers/handlerReadiness.js";
 import { middlewareLogResponses } from "./middlewares/logResponses.js";
 import { middlewareMetricsInc } from "./middlewares/metricsInc.js";
@@ -16,8 +16,9 @@ import { handlerResetMetrics } from "./handlers/handlerResetMetrics.js";
 import { handlerValidateChirp } from "./handlers/handlerValidateChirp.js";
 import { handlerRegister } from "./handlers/users.js";
 import { errorMiddleware } from "./middlewares/errors.js";
+import { asyncHandler } from "./handlers/asyncHandler.js";
 
-const app = express()
+export const app = express()
 const PORT = 8080
 
 
@@ -26,26 +27,12 @@ app.use(middlewareLogResponses);
 app.use("/app",middlewareMetricsInc);
 app.use("/app", express.static("./src/app"));
 
-type AsyncHandler = (
-  req: Request, 
-  res: Response, 
-  next: NextFunction
-) => Promise<void> | void;
-
-export function asyncHandler(fn: AsyncHandler): RequestHandler {
-    return function(req: Request, res: Response, next: NextFunction) {
-        return Promise.resolve(fn(req, res, next)).catch(next);
-    };
-}
-
 app.get("/api/healthz", asyncHandler(handlerReadiness));
 app.get("/admin/metrics", asyncHandler(handlerMetrics));
 app.post("/admin/reset", asyncHandler(handlerResetMetrics));
 app.post("/api/validate_chirp", asyncHandler(handlerValidateChirp));
 
 app.post("/api/users", asyncHandler(handlerRegister) )
-
-
 
 app.use(errorMiddleware);
 
