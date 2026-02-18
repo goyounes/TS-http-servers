@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { BadRequestError } from "../middlewares/errorsClasses.js";
 
 
-export async function handlerValidateChirp(req: Request, res: Response, next: NextFunction) {
+export async function handlerValidateChirp(req: Request, res: Response) {
     type parameters = {
         body: string;
     };

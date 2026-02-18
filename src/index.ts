@@ -26,11 +26,19 @@ app.use(middlewareLogResponses);
 app.use("/app",middlewareMetricsInc);
 app.use("/app", express.static("./src/app"));
 
-app.get("/api/healthz", handlerReadiness)
+app.get("/api/healthz", (req, res, next) => {
+  Promise.resolve(handlerReadiness(req, res)).catch(next);
+});
+app.get("/admin/metrics", (req, res, next) => {
+  Promise.resolve(handlerMetrics(req, res)).catch(next);
+});
+app.post("/admin/reset", (req, res, next) => {
+  Promise.resolve(handlerResetMetrics(req, res)).catch(next);
+});
 
-app.get("/admin/metrics", handlerMetrics)
-app.post("/admin/reset", handlerResetMetrics)
-app.post("/api/validate_chirp", handlerValidateChirp )
+app.post("/api/validate_chirp", (req, res, next) => {
+  Promise.resolve(handlerValidateChirp(req, res)).catch(next);
+});
 
 app.post("/api/users", handlerRegister )
 
