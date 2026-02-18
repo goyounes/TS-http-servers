@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { BadRequestError } from "../errors.js";
+import { BadRequestError } from "../middlewares/errorsClasses.js";
 
 
 export async function handlerValidateChirp(req: Request, res: Response, next: NextFunction) {
