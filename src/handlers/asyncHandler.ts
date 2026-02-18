@@ -1,4 +1,4 @@
-import { app } from "src";
+import { app } from "src/main";
 import { handlerMetrics } from "./handlerMetrics";
 import { handlerReadiness } from "./handlerReadiness";
 import { handlerResetMetrics } from "./handlerResetMetrics";
