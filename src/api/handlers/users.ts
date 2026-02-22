@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createUser } from "../db/queries/users.js";
-import { NewUser, User } from "../db/schema.js";
+import { createUser } from "../../db/queries/users.js";
+import { NewUser, User } from "../../db/schema.js";
 
 export async function handlerRegister(req:Request, res: Response){
 

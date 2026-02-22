@@ -8,15 +8,15 @@ await migrate(drizzle(migrationClient), config.db.migrationConfig);
 
 // ------ init express app ------
 import express from "express"
-import { handlerReadiness } from "./handlers/handlerReadiness.js";
-import { middlewareLogResponses } from "./middlewares/logResponses.js";
-import { middlewareMetricsInc } from "./middlewares/metricsInc.js";
-import { handlerMetrics } from "./handlers/handlerMetrics.js";
-import { handlerResetMetrics } from "./handlers/handlerResetMetrics.js";
-import { handlerValidateChirp } from "./handlers/handlerValidateChirp.js";
-import { handlerRegister } from "./handlers/users.js";
-import { errorMiddleware } from "./middlewares/errors.js";
-import { asyncHandler } from "./handlers/asyncHandler.js";
+import { handlerReadiness } from "./api/handlers/handlerReadiness.js";
+import { middlewareLogResponses } from "./api/middlewares/logResponses.js";
+import { middlewareMetricsInc } from "./api/middlewares/metricsInc.js";
+import { handlerMetrics } from "./api/handlers/handlerMetrics.js";
+import { handlerResetMetrics } from "./api/handlers/handlerResetMetrics.js";
+import { handlerValidateChirp } from "./api/handlers/handlerValidateChirp.js";
+import { handlerRegister } from "./api/handlers/users.js";
+import { errorMiddleware } from "./api/middlewares/errors.js";
+import { asyncHandler } from "./api/handlers/asyncHandler.js";
 
 export const app = express()
 const PORT = 8080

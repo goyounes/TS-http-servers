@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { config } from "../config.js"
-import { deleteAllUsers } from "../db/queries/users.js";
+import { config } from "../../config.js"
+import { deleteAllUsers } from "../../db/queries/users.js";
 
 export async function handlerResetMetrics(req:Request, res: Response){
     config.api.fileserverHits = 0
