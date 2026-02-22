@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { BadRequestError } from "../middlewares/errorsClasses.js";
+import { respondWithJSON } from "../json.js";
 
 
 export async function handlerValidateChirp(req: Request, res: Response) {
@@ -19,7 +20,7 @@ export async function handlerValidateChirp(req: Request, res: Response) {
     }
 
     const cleanText = replaceProfaneWords(params.body)
-    res.status(200).send(JSON.stringify({"cleanedBody": cleanText}))
+    respondWithJSON(res, 200, { cleanedBody: cleanText })
 
 }
 

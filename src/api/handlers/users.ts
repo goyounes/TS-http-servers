@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { createUser } from "../../db/queries/users.js";
 import { NewUser, User } from "../../db/schema.js";
 import { BadRequestError } from "../middlewares/errorsClasses.js";
+import { respondWithJSON } from "../json.js";
 
 export async function handlerRegister(req:Request, res: Response){
     type parameters = {
@@ -23,6 +24,6 @@ export async function handlerRegister(req:Request, res: Response){
     }
     
 
-    res.status(201).send(JSON.stringify(user))
+    respondWithJSON(res, 201, user)
 
 }

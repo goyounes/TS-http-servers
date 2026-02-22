@@ -1,5 +1,6 @@
-import express, { NextFunction, Response, Request } from "express"
+import { NextFunction, Response, Request } from "express"
 import { BadRequestError, NotFoundError, UserForbiddenError, UserNotAuthenticatedError } from "./errorsClasses.js";
+import { respondWithError } from "../json.js";
 
 export function errorMiddleware(err: Error, _: Request, res: Response, __: NextFunction) {
     let statusCode = 500;
@@ -23,5 +24,5 @@ export function errorMiddleware(err: Error, _: Request, res: Response, __: NextF
     if (statusCode >= 500) {
         console.log(err.message);
     }
-    res.status(statusCode).send(JSON.stringify({error: message}));
+    respondWithError(res, statusCode, message);
 }
