@@ -5,10 +5,12 @@ function envOrThrow (key: string): string {
 }
 
 export type APIConfig = {
-  fileserverHits: number;
+    fileserverHits: number;
+    platform: string;
 };
 const apiConfig = {
     fileserverHits: 0,
+    platform: envOrThrow("PLATFORM")
 }
 
 export type DBConfig = {
