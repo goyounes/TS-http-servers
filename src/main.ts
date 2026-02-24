@@ -17,6 +17,7 @@ import { handlerValidateChirp } from "./api/handlers/handlerValidateChirp.js";
 import { handlerRegister } from "./api/handlers/users.js";
 import { errorMiddleware } from "./api/middlewares/errors.js";
 import { asyncHandler } from "./api/handlers/asyncHandler.js";
+import { handlerCreateChrip } from "./api/handlers/handlerCreateChrip.js";
 
 export const app = express()
 const PORT = 8080
@@ -33,6 +34,8 @@ app.post("/admin/reset", asyncHandler(handlerResetMetrics));
 app.post("/api/validate_chirp", asyncHandler(handlerValidateChirp));
 
 app.post("/api/users", asyncHandler(handlerRegister) )
+
+app.post("/api/chirps", asyncHandler(handlerCreateChrip) )
 
 app.use(errorMiddleware);
 
