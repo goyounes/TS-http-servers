@@ -14,7 +14,7 @@ export async function handlerRegister(req:Request, res: Response){
         throw new BadRequestError("Missing required fields");
     }
     const newUser: NewUser = {
-        email: req.body.email
+        email: params.email
     }
     const user: User = await createUser(newUser)
 
