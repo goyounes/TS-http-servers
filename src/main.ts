@@ -16,7 +16,7 @@ import { handlerResetMetrics } from "./api/handlers/handlerResetMetrics.js";
 import { handlerRegister } from "./api/handlers/users.js";
 import { errorMiddleware } from "./api/middlewares/errors.js";
 import { asyncHandler } from "./api/handlers/asyncHandler.js";
-import { handlerCreateChrip, handlerGetChirps } from "./api/handlers/chirps.js";
+import { handlerCreateChrip, handlerGetChirp, handlerGetChirps } from "./api/handlers/chirps.js";
 
 export const app = express()
 const PORT = 8080
@@ -34,6 +34,7 @@ app.post("/admin/reset", asyncHandler(handlerResetMetrics));
 app.post("/api/users", asyncHandler(handlerRegister) )
 
 app.get("/api/chirps", asyncHandler(handlerGetChirps) )
+app.get("/api/chirps/:id", asyncHandler(handlerGetChirp) )
 app.post("/api/chirps", asyncHandler(handlerCreateChrip) )
 
 app.use(errorMiddleware);

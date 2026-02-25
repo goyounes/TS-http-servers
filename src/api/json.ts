@@ -9,3 +9,7 @@ export function respondWithJSON(res: Response, code: number, payload: any) {
   const body = JSON.stringify(payload);
   res.status(code).send(body);
 }
+
+export function isValidUUID(id: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+}

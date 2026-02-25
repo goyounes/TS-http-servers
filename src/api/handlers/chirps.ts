@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { respondWithError, respondWithJSON } from "../json.js";
-import { BadRequestError } from "../middlewares/errorsClasses.js";
-import { Chirp, NewChirp } from "../../db/schema.js";
-import { createChirp, getAllChirps } from "../../db/queries/chirps.js";
+import { isValidUUID, respondWithJSON } from "../json.js";
+import { BadRequestError, NotFoundError } from "../middlewares/errorsClasses.js";
+import { Chirp, chirps, NewChirp } from "../../db/schema.js";
+import { createChirp, getAllChirps, getChirp } from "../../db/queries/chirps.js";
 
 export async function handlerCreateChrip(req:Request, res: Response){
     type parameters = {
@@ -46,7 +46,24 @@ function replaceProfaneWords (text: string){
     return words.join(" ")
 }
 
+
 export async function handlerGetChirps (req:Request, res: Response){
     const rows = await getAllChirps()
     respondWithJSON(res, 200, rows)
 }
+
+export async function handlerGetChirp (req:Request<{id:string}>, res: Response){
+    const chirpId: string = req.params.id
+    if (!isValidUUID(chirpId)) {
+        throw new BadRequestError("Bad UUID")
+    }
+
+    const chirp: Chirp = await getChirp(chirpId)
+    console.log(chirp)
+    if(!chirp){
+        throw new NotFoundError("No chirp found with this id")
+    }
+
+    respondWithJSON(res, 200, chirp)
+}
+
