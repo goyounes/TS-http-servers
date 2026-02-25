@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { respondWithError, respondWithJSON } from "../json.js";
 import { BadRequestError } from "../middlewares/errorsClasses.js";
 import { Chirp, NewChirp } from "../../db/schema.js";
-import { createChirp } from "../../db/queries/chirps.js";
+import { createChirp, getAllChirps } from "../../db/queries/chirps.js";
 
 export async function handlerCreateChrip(req:Request, res: Response){
     type parameters = {
@@ -28,20 +28,11 @@ export async function handlerCreateChrip(req:Request, res: Response){
     } 
     console.log(newChirp)
 
-try {
     const chirp : Chirp = await createChirp(newChirp)
     if (!chirp) {
-        // throw new Error("Could not create chirp");
+        throw new Error("Could not create chirp");
     }
     respondWithJSON(res, 201, chirp)
-
-} catch (error: any) {
-    console.log(error?.message || error)
-    respondWithJSON(res, 201, "in error block")
-
-}
-
-
 
 }
 
@@ -53,4 +44,9 @@ function replaceProfaneWords (text: string){
         if (words[i].toLowerCase() === "fornax") words[i] = "****"
     }
     return words.join(" ")
+}
+
+export async function handlerGetChirps (req:Request, res: Response){
+    const rows = await getAllChirps()
+    respondWithJSON(res, 200, rows)
 }
