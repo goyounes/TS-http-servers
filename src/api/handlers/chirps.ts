@@ -52,14 +52,15 @@ export async function handlerGetChirps (req:Request, res: Response){
     respondWithJSON(res, 200, rows)
 }
 
-export async function handlerGetChirp (req:Request<{id:string}>, res: Response){
-    const chirpId: string = req.params.id
-    if (!isValidUUID(chirpId)) {
+export async function handlerGetChirp (req:Request, res: Response){
+    const { id } = req.params
+
+    if (typeof id!=="string" || !isValidUUID(id) ){
         throw new BadRequestError("Bad UUID")
     }
 
-    const chirp: Chirp = await getChirp(chirpId)
-    console.log(chirp)
+    const chirp: Chirp = await getChirp(id)
+
     if(!chirp){
         throw new NotFoundError("No chirp found with this id")
     }
