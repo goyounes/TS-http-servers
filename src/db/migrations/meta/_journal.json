@@ -15,6 +15,13 @@
       "when": 1771963393093,
       "tag": "0001_overrated_gabe_jones",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772038086676,
+      "tag": "0002_illegal_killer_shrike",
+      "breakpoints": true
     }
   ]
 }
