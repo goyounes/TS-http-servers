@@ -62,7 +62,7 @@ export async function handlerGetChirp (req:Request, res: Response){
     const chirp: Chirp = await getChirp(id)
 
     if(!chirp){
-        throw new NotFoundError("No chirp found with this id")
+        throw new NotFoundError(`Chirp with chirpId: ${id} not found`)
     }
 
     respondWithJSON(res, 200, chirp)
