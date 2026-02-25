@@ -22,6 +22,13 @@
       "when": 1772038086676,
       "tag": "0002_illegal_killer_shrike",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772049364269,
+      "tag": "0003_spotty_donald_blake",
+      "breakpoints": true
     }
   ]
 }
