@@ -16,7 +16,7 @@ import { handlerResetMetrics } from "./api/handlers/handlerResetMetrics.js";
 import { handlerLogin, handlerRefresh, handlerRegister, handlerRevoke, handlerUpdateInfo } from "./api/handlers/users.js";
 import { errorMiddleware } from "./api/middlewares/errors.js";
 import { asyncHandler } from "./api/handlers/asyncHandler.js";
-import { handlerCreateChrip, handlerGetChirp, handlerGetChirps } from "./api/handlers/chirps.js";
+import { handlerCreateChrip, handlerDeleteChrip, handlerGetChirp, handlerGetChirps } from "./api/handlers/chirps.js";
 
 export const app = express()
 const PORT = 8080
@@ -38,8 +38,9 @@ app.post("/api/refresh", asyncHandler(handlerRefresh) )
 app.post("/api/revoke", asyncHandler(handlerRevoke) )
 
 app.get("/api/chirps", asyncHandler(handlerGetChirps) )
-app.get("/api/chirps/:id", asyncHandler(handlerGetChirp) )
+app.get("/api/chirps/:chirpId", asyncHandler(handlerGetChirp) )
 app.post("/api/chirps", asyncHandler(handlerCreateChrip) )
+app.delete("/api/chirps/:chirpId", asyncHandler(handlerDeleteChrip) )
 
 app.use(errorMiddleware);
 
