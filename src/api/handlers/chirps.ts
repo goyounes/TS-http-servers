@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { isValidUUID, respondWithJSON } from "../json.js";
 import { BadRequestError, NotFoundError, UserForbiddenError } from "../middlewares/errorsClasses.js";
 import { Chirp, NewChirp } from "../../db/schema.js";
-import { createChirp, deleteChirp, getAllChirps, getChirp } from "../../db/queries/chirps.js";
+import { createChirp, deleteChirp, getChirps, getChirp } from "../../db/queries/chirps.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../../config.js";
 
@@ -75,7 +75,19 @@ export async function handlerDeleteChrip(req: Request, res: Response) {
 }
 
 export async function handlerGetChirps (req:Request, res: Response){
-    const rows = await getAllChirps()
+    let authorId = "";
+    const authorIdQuery = req.query.authorId;
+    if (typeof authorIdQuery === "string") {
+        authorId = authorIdQuery;
+    }
+    let sort : "asc" | "desc" = "asc";
+    const sortQuery = req.query.sort;
+    if (typeof sortQuery === "string" && (sortQuery === "asc" || sortQuery === "desc")) {
+        sort = sortQuery;
+        console.log("set sort to:", sort)
+    }
+    const rows = await getChirps(authorId,sort)
+
     respondWithJSON(res, 200, rows)
 }
 
