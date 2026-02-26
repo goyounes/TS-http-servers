@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUser, getUserByEmail } from "../../db/queries/users.js";
+import { createUser, getUserByEmail, updateUser } from "../../db/queries/users.js";
 import { NewUser, User} from "../../db/schema.js";
 import { BadRequestError, UserNotAuthenticatedError } from "../middlewares/errorsClasses.js";
 import { respondWithJSON } from "../json.js";
@@ -35,6 +35,37 @@ export async function handlerRegister(req:Request, res: Response){
     }
 
     respondWithJSON(res, 201, userResponse)
+
+}
+
+export async function handlerUpdateInfo(req:Request, res: Response){
+    // Define the expected parameters in the request body
+    type parameters = {
+        email: string;
+        password: string;
+    };
+    const params: parameters = req.body;
+
+    if(!params.email || !params.password){
+        throw new BadRequestError("Missing required fields");
+    }
+    const hash = await hashPassword(params.password)
+    const updatedUser: NewUser = {
+        email: params.email,
+        hashedPassword: hash
+    }
+    // Validate token and get user ID
+    const token = getBearerToken(req)
+    const userId = validateJWT(token, config.api.secret)
+
+
+    // Update user information
+    const userResponse : UserResponse = await updateUser(userId, updatedUser)
+    if (!userResponse){
+        throw new UserNotAuthenticatedError("Could not update user")
+    }
+
+    respondWithJSON(res, 200, userResponse)
 
 }
 

@@ -17,6 +17,21 @@ export async function createUser(user: NewUser) {
     return result
 }
 
+export async function updateUser(id: string, user: NewUser) {
+    const [result] = await db
+        .update(users)
+        .set(user)
+        .where(eq(users.id, id))
+        .returning({
+            id: users.id,
+            createdAt: users.createdAt,
+            updatedAt: users.updatedAt,
+            email: users.email
+        });
+    
+    return result
+}
+
 export async function getUserByEmail(email: string) {
     const [user] = await db.select()
         .from(users)
