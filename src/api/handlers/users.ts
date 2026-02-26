@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createUser, getUserByEmail, updateUser } from "../../db/queries/users.js";
-import { NewUser, User} from "../../db/schema.js";
+import { NewUser, User } from "../../db/schema.js";
 import { BadRequestError, UserNotAuthenticatedError } from "../middlewares/errorsClasses.js";
 import { respondWithJSON } from "../json.js";
 import { checkPasswordHash, getBearerToken, hashPassword, makeJWT, makeRefreshToken, validateJWT } from "../auth.js";
@@ -8,7 +8,7 @@ import { config } from "../../config.js";
 import { createRefreshToken, getRefreshToken, revokeRefreshToken } from "../../db/queries/refreshTokens.js";
 
 type UserResponse = Omit<User, "hashedPassword">
-type LoginResponse = UserResponse & { token: string, refreshToken: string }
+export type LoginResponse = UserResponse & { token: string, refreshToken: string }
 
 export async function handlerRegister(req:Request, res: Response){
     type parameters = {
@@ -108,6 +108,7 @@ export async function handlerLogin(req:Request, res: Response){
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         email: user.email,
+        isChirpyRed: user.isChirpyRed,
         token,
         refreshToken,
     }

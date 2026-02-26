@@ -17,6 +17,7 @@ import { handlerLogin, handlerRefresh, handlerRegister, handlerRevoke, handlerUp
 import { errorMiddleware } from "./api/middlewares/errors.js";
 import { asyncHandler } from "./api/handlers/asyncHandler.js";
 import { handlerCreateChrip, handlerDeleteChrip, handlerGetChirp, handlerGetChirps } from "./api/handlers/chirps.js";
+import { handlerWebHook } from "./api/handlers/handlerWebHook.js";
 
 export const app = express()
 const PORT = 8080
@@ -41,6 +42,8 @@ app.get("/api/chirps", asyncHandler(handlerGetChirps) )
 app.get("/api/chirps/:chirpId", asyncHandler(handlerGetChirp) )
 app.post("/api/chirps", asyncHandler(handlerCreateChrip) )
 app.delete("/api/chirps/:chirpId", asyncHandler(handlerDeleteChrip) )
+
+app.post("/api/polka/webhooks", asyncHandler(handlerWebHook) )
 
 app.use(errorMiddleware);
 

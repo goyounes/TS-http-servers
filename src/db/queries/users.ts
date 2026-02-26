@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, is } from "drizzle-orm";
 import { db } from "../index.js";
 import { NewUser, users } from "../schema.js";
 
@@ -11,7 +11,23 @@ export async function createUser(user: NewUser) {
             id: users.id,
             createdAt: users.createdAt,
             updatedAt: users.updatedAt,
-            email: users.email
+            email: users.email,
+            isChirpyRed: users.isChirpyRed
+        });
+
+    return result
+}
+export async function upgradeUser(id: string) {
+    const [result] = await db
+        .update(users)
+        .set({ isChirpyRed: true })
+        .where(eq(users.id, id))
+        .returning({
+            id: users.id,
+            createdAt: users.createdAt,
+            updatedAt: users.updatedAt,
+            email: users.email,
+            isChirpyRed: users.isChirpyRed
         });
 
     return result
@@ -26,7 +42,8 @@ export async function updateUser(id: string, user: NewUser) {
             id: users.id,
             createdAt: users.createdAt,
             updatedAt: users.updatedAt,
-            email: users.email
+            email: users.email,
+            isChirpyRed: users.isChirpyRed
         });
     
     return result
