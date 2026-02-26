@@ -1,6 +1,6 @@
 import argon2 from "argon2"
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { NotFoundError, UserNotAuthenticatedError } from "./middlewares/errorsClasses.js";
+import { UserNotAuthenticatedError } from "./middlewares/errorsClasses.js";
 
 export async function hashPassword(password: string): Promise<string>{
     return argon2.hash(password);
@@ -39,4 +39,17 @@ export function validateJWT(tokenString: string, secret: string): string {
   }
 
   return decoded.sub
+}
+
+export function getBearerToken(req: Request): string {
+    const authHeader = req.headers.get("Authorization")
+    if (!authHeader) {
+        throw new UserNotAuthenticatedError("")
+    }
+
+    const [_, token] =  authHeader.split(" ")
+    if (!token){
+        throw new UserNotAuthenticatedError("")
+    }
+    return token
 }

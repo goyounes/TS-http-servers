@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import { createUser, getUserByEmail } from "../../db/queries/users.js";
-import { NewUser, User, UserResponse } from "../../db/schema.js";
+import { NewUser, User} from "../../db/schema.js";
 import { BadRequestError, UserNotAuthenticatedError } from "../middlewares/errorsClasses.js";
 import { respondWithJSON } from "../json.js";
-import { checkPasswordHash, hashPassword } from "../auth.js";
+import { checkPasswordHash, hashPassword, makeJWT } from "../auth.js";
+import { config } from "../../config.js";
+
+type UserResponse = Omit<User, "hashedPassword">
 
 export async function handlerRegister(req:Request, res: Response){
     type parameters = {
@@ -37,6 +40,7 @@ export async function handlerLogin(req:Request, res: Response){
     type parameters = {
         email: string;
         password: string;
+        expiresInSeconds?: number;
     };
     const params: parameters = req.body;
 
@@ -54,12 +58,15 @@ export async function handlerLogin(req:Request, res: Response){
     if (!correctPassword) {
         throw new UserNotAuthenticatedError(`incorrect email or password`);
     }
+    const exp = params.expiresInSeconds || 1 * 60 * 60 * 1000
+    const token = makeJWT(user.id, exp, config.api.secret )
 
-    const userResponse: UserResponse = {
+    const userResponse: UserResponse & { token: string } = {
         id: user.id,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        email: user.email
+        email: user.email,
+        token,
     }
 
     respondWithJSON(res, 200, userResponse)

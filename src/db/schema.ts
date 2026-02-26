@@ -18,7 +18,6 @@ export const chirps = pgTable("chirps", {
 
 export type NewUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
-export type UserResponse = Omit<User, "hashedPassword">
 
 export type NewChirp = typeof chirps.$inferInsert;
 export type Chirp = typeof chirps.$inferSelect;
