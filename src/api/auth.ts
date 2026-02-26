@@ -61,3 +61,16 @@ export function makeRefreshToken(): string {
 
     return token
 }
+
+export function getAPIKey(req: Request): string {
+    const authHeader = req.get("Authorization")
+    if (!authHeader) {
+        throw new UserNotAuthenticatedError("Malformed authorization header")
+    }
+
+    const [_, apiKey] =  authHeader.split(" ")
+    if (!apiKey){
+        throw new UserNotAuthenticatedError("Malformed authorization header")
+    }
+    return apiKey
+}

@@ -8,11 +8,13 @@ export type APIConfig = {
     fileserverHits: number;
     platform: string;
     secret: string;
+    polkaKey: string;
 };
 const apiConfig = {
     fileserverHits: 0,
     platform: envOrThrow("PLATFORM"),
-    secret: envOrThrow("SECRET")
+    secret: envOrThrow("SECRET"),
+    polkaKey: envOrThrow("POLKA_KEY")
 }
 
 export type DBConfig = {

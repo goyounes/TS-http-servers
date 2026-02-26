@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { upgradeUser } from "../../db/queries/users.js";
-import { BadRequestError, NotFoundError } from "../middlewares/errorsClasses.js";
+import { BadRequestError, NotFoundError, UserNotAuthenticatedError } from "../middlewares/errorsClasses.js";
 import { isValidUUID } from "../json.js";
+import { getAPIKey } from "../auth.js";
 
 export async function handlerWebHook(req:Request, res: Response){
     type parameters = {
@@ -18,6 +19,14 @@ export async function handlerWebHook(req:Request, res: Response){
     if(!(isValidUUID(params.data.userId))){
         throw new BadRequestError("Bad UUID")
     }
+
+    const expectedKey = process.env.POLKA_KEY
+    const receivedKey = getAPIKey(req)
+
+    if (expectedKey !== receivedKey){
+        throw new UserNotAuthenticatedError("Invalid API key")
+    }
+
     if (params.event !== "user.upgraded"){
         res.sendStatus(204)
         return
