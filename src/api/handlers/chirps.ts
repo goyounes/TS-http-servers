@@ -3,6 +3,8 @@ import { isValidUUID, respondWithJSON } from "../json.js";
 import { BadRequestError, NotFoundError } from "../middlewares/errorsClasses.js";
 import { Chirp, chirps, NewChirp } from "../../db/schema.js";
 import { createChirp, getAllChirps, getChirp } from "../../db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "../auth.js";
+import { config } from "../../config.js";
 
 const MAX_CHIRP_LENGTH = 140;
 
@@ -17,9 +19,6 @@ function replaceProfaneWords (text: string){
 }
 
 function validateChirp(body: string): string {
-    if (!body) {
-        throw new BadRequestError("JSON Invalid format");
-    }
     if (body.length > MAX_CHIRP_LENGTH) {
         throw new BadRequestError(`Chirp is too long. Max length is ${MAX_CHIRP_LENGTH}`);
     }
@@ -29,15 +28,20 @@ function validateChirp(body: string): string {
 export async function handlerCreateChrip(req: Request, res: Response) {
     type parameters = {
         body: string;
-        userId: string;
     };
     const params: parameters = req.body;
+    if (!params.body){
+        throw new BadRequestError("Missing required fields");
+    }
+    const token = getBearerToken(req)
+
+    const userId = validateJWT(token, config.api.secret)
 
     const cleanBody = validateChirp(params.body);
 
     const newChirp: NewChirp = {
         body: cleanBody,
-        userId: params.userId,
+        userId: userId,
     };
 
     const chirp: Chirp = await createChirp(newChirp);
