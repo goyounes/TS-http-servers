@@ -58,7 +58,7 @@ export async function handlerLogin(req:Request, res: Response){
     if (!correctPassword) {
         throw new UserNotAuthenticatedError(`incorrect email or password`);
     }
-    const exp = params.expiresInSeconds || 1 * 60 * 60 * 1000
+    const exp = params.expiresInSeconds || 1 * 60 * 60
     const token = makeJWT(user.id, exp, config.api.secret )
 
     const userResponse: UserResponse & { token: string } = {
