@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import { createUser, getUserByEmail } from "../../db/queries/users.js";
-import { Chirp, NewChirp, NewUser, User} from "../../db/schema.js";
+import { NewUser, User} from "../../db/schema.js";
 import { BadRequestError, UserNotAuthenticatedError } from "../middlewares/errorsClasses.js";
 import { respondWithJSON } from "../json.js";
 import { checkPasswordHash, getBearerToken, hashPassword, makeJWT, makeRefreshToken, validateJWT } from "../auth.js";
 import { config } from "../../config.js";
 import { createRefreshToken, getRefreshToken, revokeRefreshToken } from "../../db/queries/refreshTokens.js";
-import { createChirp } from "../../db/queries/chirps.js";
-import { validateChirp } from "./chirps.js";
 
 type UserResponse = Omit<User, "hashedPassword">
 type LoginResponse = UserResponse & { token: string, refreshToken: string }
@@ -94,7 +92,7 @@ export async function handlerRefresh(req:Request, res: Response){
     if (!refreshToken) {
         throw new UserNotAuthenticatedError("Invalid refresh token");
     }
-    
+
     if (refreshToken.expiresAt < new Date() || refreshToken.revokedAt) {
         throw new UserNotAuthenticatedError("Refresh token expired or revoked");
     }

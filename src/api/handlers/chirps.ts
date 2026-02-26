@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { isValidUUID, respondWithJSON } from "../json.js";
 import { BadRequestError, NotFoundError } from "../middlewares/errorsClasses.js";
-import { Chirp, chirps, NewChirp } from "../../db/schema.js";
+import { Chirp, NewChirp } from "../../db/schema.js";
 import { createChirp, getAllChirps, getChirp } from "../../db/queries/chirps.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../../config.js";
@@ -18,7 +18,7 @@ function replaceProfaneWords (text: string){
     return words.join(" ")
 }
 
-function validateChirp(body: string): string {
+export function validateChirp(body: string): string {
     if (body.length > MAX_CHIRP_LENGTH) {
         throw new BadRequestError(`Chirp is too long. Max length is ${MAX_CHIRP_LENGTH}`);
     }
