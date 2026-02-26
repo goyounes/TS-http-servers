@@ -13,7 +13,7 @@ import { middlewareLogResponses } from "./api/middlewares/logResponses.js";
 import { middlewareMetricsInc } from "./api/middlewares/metricsInc.js";
 import { handlerMetrics } from "./api/handlers/handlerMetrics.js";
 import { handlerResetMetrics } from "./api/handlers/handlerResetMetrics.js";
-import { handlerLogin, handlerRegister } from "./api/handlers/users.js";
+import { handlerLogin, handlerRefresh, handlerRegister, handlerRevoke } from "./api/handlers/users.js";
 import { errorMiddleware } from "./api/middlewares/errors.js";
 import { asyncHandler } from "./api/handlers/asyncHandler.js";
 import { handlerCreateChrip, handlerGetChirp, handlerGetChirps } from "./api/handlers/chirps.js";
@@ -33,6 +33,8 @@ app.post("/admin/reset", asyncHandler(handlerResetMetrics));
 
 app.post("/api/users", asyncHandler(handlerRegister) )
 app.post("/api/login", asyncHandler(handlerLogin) )
+app.post("/api/refresh", asyncHandler(handlerRefresh) )
+app.post("/api/revoke", asyncHandler(handlerRevoke) )
 
 app.get("/api/chirps", asyncHandler(handlerGetChirps) )
 app.get("/api/chirps/:id", asyncHandler(handlerGetChirp) )

@@ -2,6 +2,7 @@ import argon2 from "argon2"
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { UserNotAuthenticatedError } from "./middlewares/errorsClasses.js";
 import { Request } from "express";
+import crypto from "crypto";
 
 export async function hashPassword(password: string): Promise<string>{
     return argon2.hash(password);
@@ -52,5 +53,11 @@ export function getBearerToken(req: Request): string {
     if (!token){
         throw new UserNotAuthenticatedError("Malformed authorization header")
     }
+    return token
+}
+
+export function makeRefreshToken(): string {
+    const token = crypto.randomBytes(32).toString("hex")
+
     return token
 }
