@@ -23,15 +23,20 @@ export function makeJWT(userID: string, expiresIn: number, secret: string): stri
 }
 
 export function validateJWT(tokenString: string, secret: string): string {
-    const decoded = jwt.verify(tokenString, secret)
+  let decoded: Payload;
+  try {
+    decoded = jwt.verify(tokenString, secret) as JwtPayload;
+  } catch (e) {
+    throw new UserNotAuthenticatedError("Invalid token");
+  }
 
-    if (!decoded){
-        throw new UserNotAuthenticatedError("Invalid token")
-    }
-    if (typeof decoded !== "string" && decoded.sub){
-        return decoded.sub 
-    } else {
-        throw new NotFoundError("")
-    }
+  if (decoded.iss !== "chirpy") {
+    throw new UserNotAuthenticatedError("Invalid issuer");
+  }
 
+  if (!decoded.sub) {
+    throw new UserNotAuthenticatedError("No user ID in token");
+  }
+
+  return decoded.sub
 }
