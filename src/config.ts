@@ -7,10 +7,12 @@ function envOrThrow (key: string): string {
 export type APIConfig = {
     fileserverHits: number;
     platform: string;
+    secret: string;
 };
 const apiConfig = {
     fileserverHits: 0,
-    platform: envOrThrow("PLATFORM")
+    platform: envOrThrow("PLATFORM"),
+    secret: envOrThrow("SECRET")
 }
 
 export type DBConfig = {
